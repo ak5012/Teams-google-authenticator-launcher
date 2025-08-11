@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Open Google Auth</title>
+    <!-- Teams JS v2 -->
+    <script src="https://res.cdn.office.net/teams-js/2.17.0/js/MicrosoftTeams.min.js"></script>
+    <script>
+      // Initialize the Teams SDK when the page is running in a Teams tab
+      microsoftTeams.app.initialize().then(() => {
+        console.log("Teams SDK initialized.");
+        // If you prefer auto-open without a button, uncomment the next line:
+        // microsoftTeams.app.openLink("https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94");
+      });
+
+      function openAuth() {
+        microsoftTeams.app.openLink(
+          "https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94"
+        );
+      }
+    </script>
+  </head>
+  <body style="font-family: system-ui; padding: 24px; line-height: 1.4;">
+    <h2 style="margin: 0 0 8px;">Google Sign-in</h2>
+    <p style="margin: 0 0 16px;">Click below to open the authentication page.</p>
+    <button
+      onclick="openAuth()"
+      style="padding:10px 16px; border-radius:8px; border:1px solid #ddd; cursor:pointer;"
+    >
+      Open Google Auth
+    </button>
+  </body>
+</html>
