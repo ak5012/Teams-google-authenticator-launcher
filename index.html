@@ -2,51 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Google Auth Launcher</title>
 
-    <!-- Teams JS SDK v2 -->
+    <!-- Teams JS SDK v2 (required for openLink) -->
     <script src="https://res.cdn.office.net/teams-js/2.17.0/js/MicrosoftTeams.min.js"></script>
 
     <style>
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        margin: 0;
-        padding: 24px;
-        line-height: 1.45;
-      }
-      .card {
-        max-width: 560px;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      }
-      h1 {
-        font-size: 20px;
-        margin: 0 0 8px;
-      }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 24px; line-height: 1.45; }
+      .card { max-width: 560px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+      h1 { font-size: 20px; margin: 0 0 8px; }
       p { margin: 0 0 16px; color: #374151; }
-      button {
-        padding: 10px 16px;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        background: #ffffff;
-        cursor: pointer;
-        font-weight: 600;
-      }
+      button { padding: 10px 16px; border-radius: 10px; border: 1px solid #d1d5db; background: #ffffff; cursor: pointer; font-weight: 600; }
       button:hover { background: #f9fafb; }
-      .hint {
-        margin-top: 12px;
-        font-size: 12px;
-        color: #6b7280;
-      }
-      .ok { color: #059669; }
-      .warn { color: #b45309; }
-      .err { color: #b91c1c; }
+      .hint { margin-top: 12px; font-size: 12px; color: #6b7280; }
+      .ok { color: #059669; } .warn { color: #b45309; } .err { color: #b91c1c; }
     </style>
   </head>
 
@@ -59,25 +29,26 @@
 
       <div id="status" class="hint"></div>
       <div class="hint">
-        Note: This page is meant to run inside Microsoft Teams. If you’re viewing it in a normal browser, the button won’t launch the link.
+        Tip: This page is meant to run inside Microsoft Teams. In a normal browser, the button won't launch the link via Teams.
       </div>
     </div>
 
     <script>
+      // ✅ Use the clean, correct URL (note .com)
       const AUTH_URL =
         "https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94";
 
       const statusEl = document.getElementById("status");
       const btn = document.getElementById("openBtn");
 
-      // Initialize Teams SDK
+      // Initialize Teams SDK. If not inside Teams, this will reject (we show a hint).
       microsoftTeams.app.initialize()
         .then(() => {
           statusEl.textContent = "Loaded in Teams.";
           statusEl.className = "hint ok";
         })
         .catch(() => {
-          statusEl.textContent = "Not running inside Teams (preview mode or plain browser).";
+          statusEl.textContent = "Not running inside Teams (normal browser or preview).";
           statusEl.className = "hint warn";
         });
 
@@ -93,8 +64,9 @@
         }
       });
 
-      // If you prefer auto-open whenever the tab loads in Teams, uncomment:
+      // If you prefer auto-open inside Teams, uncomment this:
       // microsoftTeams.app.initialize().then(() => microsoftTeams.app.openLink(AUTH_URL));
     </script>
   </body>
 </html>
+
