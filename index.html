@@ -1,33 +1,100 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Open Google Auth</title>
-    <!-- Teams JS v2 -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>Google Auth Launcher</title>
+
+    <!-- Teams JS SDK v2 -->
     <script src="https://res.cdn.office.net/teams-js/2.17.0/js/MicrosoftTeams.min.js"></script>
+
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        margin: 0;
+        padding: 24px;
+        line-height: 1.45;
+      }
+      .card {
+        max-width: 560px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 8px;
+      }
+      p { margin: 0 0 16px; color: #374151; }
+      button {
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        background: #ffffff;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover { background: #f9fafb; }
+      .hint {
+        margin-top: 12px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .ok { color: #059669; }
+      .warn { color: #b45309; }
+      .err { color: #b91c1c; }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h1>Google Auth</h1>
+      <p>Click the button below to open the authentication page.</p>
+
+      <button id="openBtn" type="button">Open Google Auth</button>
+
+      <div id="status" class="hint"></div>
+      <div class="hint">
+        Note: This page is meant to run inside Microsoft Teams. If you’re viewing it in a normal browser, the button won’t launch the link.
+      </div>
+    </div>
+
     <script>
-      // Initialize the Teams SDK when the page is running in a Teams tab
-      microsoftTeams.app.initialize().then(() => {
-        console.log("Teams SDK initialized.");
-        // If you prefer auto-open without a button, uncomment the next line:
-        // microsoftTeams.app.openLink("https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94");
+      const AUTH_URL =
+        "https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94";
+
+      const statusEl = document.getElementById("status");
+      const btn = document.getElementById("openBtn");
+
+      // Initialize Teams SDK
+      microsoftTeams.app.initialize()
+        .then(() => {
+          statusEl.textContent = "Loaded in Teams.";
+          statusEl.className = "hint ok";
+        })
+        .catch(() => {
+          statusEl.textContent = "Not running inside Teams (preview mode or plain browser).";
+          statusEl.className = "hint warn";
+        });
+
+      btn.addEventListener("click", async () => {
+        try {
+          await microsoftTeams.app.openLink(AUTH_URL);
+          statusEl.textContent = "Opening link…";
+          statusEl.className = "hint ok";
+        } catch (e) {
+          statusEl.textContent = "Could not open link (are you inside Teams?)";
+          statusEl.className = "hint err";
+          console.error(e);
+        }
       });
 
-      function openAuth() {
-        microsoftTeams.app.openLink(
-          "https://auth.cloud.google.com/signin/locations/global/workforcePools/solenis-entra-azure-pool/providers/solenis-entra-provider?continueUrl=https://vertexaisearch.cloud.google/us/home/cid/a83b1abf-aab0-4273-b75d-255e027bfb94"
-        );
-      }
+      // If you prefer auto-open whenever the tab loads in Teams, uncomment:
+      // microsoftTeams.app.initialize().then(() => microsoftTeams.app.openLink(AUTH_URL));
     </script>
-  </head>
-  <body style="font-family: system-ui; padding: 24px; line-height: 1.4;">
-    <h2 style="margin: 0 0 8px;">Google Sign-in</h2>
-    <p style="margin: 0 0 16px;">Click below to open the authentication page.</p>
-    <button
-      onclick="openAuth()"
-      style="padding:10px 16px; border-radius:8px; border:1px solid #ddd; cursor:pointer;"
-    >
-      Open Google Auth
-    </button>
   </body>
 </html>
